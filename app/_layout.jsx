@@ -12,7 +12,6 @@ const RootLayout = () => {
     PoppinsLight: require("../assets/fonts/PoppinsLight.ttf"),
     PoppinsMedium: require("../assets/fonts/PoppinsMedium.ttf"),
     PoppinsRegular: require("../assets/fonts/PoppinsRegular.ttf"),
-    PoppinsSemibold: require("../assets/fonts/PoppinsSemiBold.ttf"),
     PoppinsThin: require("../assets/fonts/PoppinsThin.ttf"),
   })
 
@@ -30,6 +29,9 @@ const RootLayout = () => {
   return (
     <Stack>
       <Stack.Screen name="index" options={{ headerShown: false }} />
+      <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+      <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+      {/* <Stack.Screen name="search/[query]" options={{ headerShown: false }} /> */}
     </Stack>
   )
 }
