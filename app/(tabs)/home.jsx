@@ -6,10 +6,12 @@ import SearchInput from "../../components/SearchInput"
 import Trending from "../../components/Trending"
 import VideoCard from "../../components/VideoCard"
 import { images } from "../../constants"
+import { useGlobalContext } from "../../context/GlobalProvider"
 import { getAllPosts, getLatestPosts } from "../../lib/appwrite"
 import useAppwrite from "../../lib/useAppwrite"
 
 const Home = () => {
+  const { user } = useGlobalContext()
   const { data: posts, refetch } = useAppwrite(getAllPosts)
   const { data: latestposts } = useAppwrite(getLatestPosts)
   const [refreshing, setRefreshing] = useState(false)
@@ -32,10 +34,10 @@ const Home = () => {
             <View className="flex-row justify-between items-start mb-6">
               <View>
                 <Text className="font-pmedium text-sm text-gray-100">
-                  Welcome Back
+                  Welcome Back,
                 </Text>
                 <Text className="font-psemibold text-2xl text-gray-100">
-                  JS Mastery
+                  {user.username}
                 </Text>
               </View>
               <View className="mt-1.5">
