@@ -1,13 +1,13 @@
-import { ResizeMode, Video } from "expo-av"
-import React, { useState } from "react"
+import { ResizeMode, Video } from "expo-av";
+import React, { useState } from "react";
 import {
   FlatList,
   Image,
   ImageBackground,
   TouchableOpacity,
-} from "react-native"
-import * as Animatable from "react-native-animatable"
-import { icons } from "../constants"
+} from "react-native";
+import * as Animatable from "react-native-animatable";
+import { icons } from "../constants";
 
 const zoomIn = {
   0: {
@@ -16,7 +16,7 @@ const zoomIn = {
   1: {
     scale: 1.05,
   },
-}
+};
 
 const zoomOut = {
   0: {
@@ -25,10 +25,10 @@ const zoomOut = {
   1: {
     scale: 0.9,
   },
-}
+};
 
 const TrendingItem = ({ activeItem, item }) => {
-  const [play, setPlay] = useState(false)
+  const [play, setPlay] = useState(false);
 
   return (
     <Animatable.View
@@ -47,7 +47,7 @@ const TrendingItem = ({ activeItem, item }) => {
           shouldPlay
           onPlaybackStatusUpdate={(status) => {
             if (status.didJustFinish) {
-              setPlay(false)
+              setPlay(false);
             }
           }}
           onError={(error) => console.error("Video playback error:", error)}
@@ -72,17 +72,17 @@ const TrendingItem = ({ activeItem, item }) => {
         </TouchableOpacity>
       )}
     </Animatable.View>
-  )
-}
+  );
+};
 
 const Trending = ({ posts }) => {
-  const [activeItem, setActiveItem] = useState(posts[0])
+  const [activeItem, setActiveItem] = useState(posts[0]);
 
   const viewableItemsChanged = ({ viewableItems }) => {
     if (viewableItems.length > 0) {
-      setActiveItem(viewableItems[0].key)
+      setActiveItem(viewableItems[0].key);
     }
-  }
+  };
 
   return (
     <FlatList
@@ -100,7 +100,7 @@ const Trending = ({ posts }) => {
         x: 145,
       }}
     />
-  )
-}
+  );
+};
 
-export default Trending
+export default Trending;

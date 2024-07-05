@@ -1,32 +1,40 @@
-import { router } from "expo-router"
-import React from "react"
-import { FlatList, Image, TouchableOpacity, View } from "react-native"
-import { SafeAreaView } from "react-native-safe-area-context"
-import EmptyState from "../../components/EmptyState"
-import InfoBox from "../../components/InfoBox"
-import VideoCard from "../../components/VideoCard"
-import { icons } from "../../constants"
-import { useGlobalContext } from "../../context/GlobalProvider"
-import { getUserPosts, signOut } from "../../lib/appwrite"
-import useAppwrite from "../../lib/useAppwrite"
+import { router, useFocusEffect } from "expo-router";
+import React from "react";
+import { FlatList, Image, TouchableOpacity, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import EmptyState from "../../components/EmptyState";
+import InfoBox from "../../components/InfoBox";
+import VideoCard from "../../components/VideoCard";
+import { icons } from "../../constants";
+import { useGlobalContext } from "../../context/GlobalProvider";
+import { getUserPosts, signOut } from "../../lib/appwrite";
+import useAppwrite from "../../lib/useAppwrite";
 
 const Profile = () => {
-  const { user, setUser, setIsLoggedIn } = useGlobalContext()
-  const { data: posts, refetch } = useAppwrite(() => getUserPosts(user.$id))
+  const { user, setUser, setIsLoggedIn } = useGlobalContext();
+  const { data: posts, refetch } = useAppwrite(() => getUserPosts(user.$id));
 
   const logOut = () => {
-    signOut()
-    setUser(null)
-    setIsLoggedIn(false)
-    router.replace("/sign-in")
-  }
+    signOut();
+    setUser(null);
+    setIsLoggedIn(false);
+    router.replace("/sign-in");
+  };
+
+  useFocusEffect(
+    React.useCallback(() => {
+      refetch();
+    }, [])
+  );
 
   return (
     <SafeAreaView className="bg-primary w-full h-full">
       <FlatList
         data={posts}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => <VideoCard video={item} />}
+        keyExtractor={(item) => item.$id}
+        renderItem={({ item }) => (
+          <VideoCard video={item} handleOnSave={() => refetch()} />
+        )}
         ListHeaderComponent={() => (
           <View className="w-full justify-center items-center px-4 mt-6 mb-12">
             <TouchableOpacity
@@ -72,7 +80,7 @@ const Profile = () => {
         )}
       />
     </SafeAreaView>
-  )
-}
+  );
+};
 
-export default Profile
+export default Profile;

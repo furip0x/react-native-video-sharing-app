@@ -1,17 +1,26 @@
-import { ResizeMode, Video } from "expo-av"
-import React, { useState } from "react"
-import { Image, Text, TouchableOpacity, View } from "react-native"
-import { icons } from "../constants"
+import { ResizeMode, Video } from "expo-av";
+import React, { useState } from "react";
+import { Image, Text, TouchableOpacity, View } from "react-native";
+import { icons } from "../constants";
+import { savePost } from "../lib/appwrite";
+import tailwindConfig from "../tailwind.config";
 
 const VideoCard = ({
   video: {
+    $id,
     title,
     thumbnail,
     video,
     creator: { username, avatar },
+    liked,
   },
+  handleOnSave,
 }) => {
-  const [play, setPlay] = useState(false)
+  const [play, setPlay] = useState(false);
+
+  const addPostToSaved = async (id, liked) => {
+    await savePost(id, liked);
+  };
 
   return (
     <View className="px-4 mb-14">
@@ -41,9 +50,26 @@ const VideoCard = ({
           </View>
         </View>
 
-        <View className="flex-shrink-0 pt-3">
-          <Image source={icons.menu} className="w-5 h-5" resizeMode="contain" />
-        </View>
+        <TouchableOpacity
+          className="flex-shrink-0 pt-3"
+          onPress={() => {
+            addPostToSaved($id, liked);
+            if (handleOnSave) {
+              handleOnSave();
+            }
+          }}
+        >
+          <Image
+            source={icons.bookmark}
+            className="w-5 h-5"
+            resizeMode="contain"
+            tintColor={
+              liked
+                ? tailwindConfig.theme.extend.colors["secondary"]["DEFAULT"]
+                : ""
+            }
+          />
+        </TouchableOpacity>
       </View>
 
       {play ? (
@@ -57,7 +83,7 @@ const VideoCard = ({
           shouldPlay
           onPlaybackStatusUpdate={(status) => {
             if (status.didJustFinish) {
-              setPlay(false)
+              setPlay(false);
             }
           }}
           onError={(error) => console.error("Video playback error:", error)}
@@ -82,7 +108,7 @@ const VideoCard = ({
         </TouchableOpacity>
       )}
     </View>
-  )
-}
+  );
+};
 
-export default VideoCard
+export default VideoCard;

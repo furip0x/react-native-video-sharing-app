@@ -1,34 +1,43 @@
-import React, { useState } from "react"
-import { FlatList, Image, RefreshControl, Text, View } from "react-native"
-import { SafeAreaView } from "react-native-safe-area-context"
-import EmptyState from "../../components/EmptyState"
-import SearchInput from "../../components/SearchInput"
-import Trending from "../../components/Trending"
-import VideoCard from "../../components/VideoCard"
-import { images } from "../../constants"
-import { useGlobalContext } from "../../context/GlobalProvider"
-import { getAllPosts, getLatestPosts } from "../../lib/appwrite"
-import useAppwrite from "../../lib/useAppwrite"
+import { useFocusEffect } from "expo-router";
+import React, { useState } from "react";
+import { FlatList, Image, RefreshControl, Text, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import EmptyState from "../../components/EmptyState";
+import SearchInput from "../../components/SearchInput";
+import Trending from "../../components/Trending";
+import VideoCard from "../../components/VideoCard";
+import { images } from "../../constants";
+import { useGlobalContext } from "../../context/GlobalProvider";
+import { getAllPosts, getLatestPosts } from "../../lib/appwrite";
+import useAppwrite from "../../lib/useAppwrite";
 
 const Home = () => {
-  const { user } = useGlobalContext()
-  const { data: posts, refetch } = useAppwrite(getAllPosts)
-  const { data: latestposts } = useAppwrite(getLatestPosts)
-  const [refreshing, setRefreshing] = useState(false)
+  const { user } = useGlobalContext();
+  const { data: posts, refetch } = useAppwrite(getAllPosts);
+  const { data: latestposts } = useAppwrite(getLatestPosts);
+  const [refreshing, setRefreshing] = useState(false);
 
   const onRefresh = async () => {
-    setRefreshing(true)
-    const posts = await getAllPosts()
-    await refetch()
-    setRefreshing(false)
-  }
+    setRefreshing(true);
+    const posts = await getAllPosts();
+    await refetch();
+    setRefreshing(false);
+  };
 
+  useFocusEffect(
+    React.useCallback(() => {
+      refetch();
+    }, [])
+  );
+  console.log("changed");
   return (
     <SafeAreaView className="bg-primary w-full h-full">
       <FlatList
         data={posts}
         keyExtractor={(item) => item.$id}
-        renderItem={({ item }) => <VideoCard video={item} />}
+        renderItem={({ item }) => (
+          <VideoCard video={item} handleOnSave={() => refetch()} />
+        )}
         ListHeaderComponent={() => (
           <View className="my-6 px-4 space-y-6">
             <View className="flex-row justify-between items-start mb-6">
@@ -70,7 +79,7 @@ const Home = () => {
         }
       />
     </SafeAreaView>
-  )
-}
+  );
+};
 
-export default Home
+export default Home;

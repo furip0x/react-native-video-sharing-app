@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import { useFocusEffect } from "expo-router";
+import React, { useState } from "react";
 import { FlatList, RefreshControl, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import EmptyState from "../../components/EmptyState";
@@ -17,9 +18,11 @@ const Bookmark = () => {
     setRefreshing(false);
   };
 
-  useEffect(() => {
-    refetch();
-  }, []);
+  useFocusEffect(
+    React.useCallback(() => {
+      refetch();
+    }, [])
+  );
 
   return (
     <SafeAreaView className="bg-primary w-full h-full">
